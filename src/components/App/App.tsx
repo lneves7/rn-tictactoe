@@ -1,21 +1,55 @@
 import { StatusBar } from 'expo-status-bar';
-import { View, Text } from 'react-native';
+import { useState } from 'react';
+import { View } from 'react-native';
+import { PlayerData, PlayerIdEnum, SymbolEnum } from '../../types';
 import styles from './styles';
+import PlayerRegisterView from '../PlayerRegisterView/PlayerRegisterView';
+import { COLORS } from '../../constants';
 
 export default function App() {
-    return (
-      <View style={styles.container}>
-        <Text>Hello Tic tac Toe!</Text>
-        <StatusBar style="auto" />
-      </View>
-    );
+  const [playerData, setPlayerData] = useState<PlayerData>({
+    PlayerOne: {winCount: 0},
+    PlayerTwo: {winCount: 0},
+  });
+
+  const handleNextRegister = (
+    playerid: PlayerIdEnum, 
+    name: string, 
+    avatarId: string, 
+    symbol: SymbolEnum
+    ) => {
+    setPlayerData(prevPlayerData => ({
+      ...prevPlayerData, 
+      [playerid]: {
+        name, 
+        avatarId, 
+        symbol
+      }
+    }));
   }
-  
-  /**
-   * 
-   * 
-#F6F1F1
-#AFD3E2
-#19A7CE
-#146C94
-   */
+
+  const renderRegisterViews = () => {
+    if (!playerData.PlayerOne.name || !playerData.PlayerOne.avatarId 
+        || !playerData.PlayerOne.symbol
+    ) {
+      return (
+        <PlayerRegisterView 
+          playerId={PlayerIdEnum.PLAYER_ONE}
+          onNextCallback={({name, avatarId, symbol}) => handleNextRegister(
+            PlayerIdEnum.PLAYER_ONE,
+            name,
+            avatarId,
+            symbol
+          )} 
+        />
+      );
+    }
+  }
+   
+  return (
+    <View style={styles.container}>
+      <StatusBar backgroundColor={COLORS.lightblue} />
+      { renderRegisterViews() }
+    </View>
+  );
+}
