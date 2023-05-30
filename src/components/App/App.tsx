@@ -8,48 +8,60 @@ import { COLORS } from '../../constants';
 
 export default function App() {
   const [playerData, setPlayerData] = useState<PlayerData>({
-    PlayerOne: {winCount: 0},
-    PlayerTwo: {winCount: 0},
+    PlayerOne: { winCount: 0, symbol: SymbolEnum.X },
+    PlayerTwo: { winCount: 0, symbol: SymbolEnum.CIRCLE },
   });
 
   const handleNextRegister = (
-    playerid: PlayerIdEnum, 
-    name: string, 
-    avatarId: string, 
-    symbol: SymbolEnum
-    ) => {
+    playerid: PlayerIdEnum,
+    name: string,
+    avatarId: string,
+  ) => {
     setPlayerData(prevPlayerData => ({
-      ...prevPlayerData, 
+      ...prevPlayerData,
       [playerid]: {
-        name, 
-        avatarId, 
-        symbol
+        ...prevPlayerData[playerid],
+        name,
+        avatarId,
       }
     }));
   }
 
   const renderRegisterViews = () => {
-    if (!playerData.PlayerOne.name || !playerData.PlayerOne.avatarId 
-        || !playerData.PlayerOne.symbol
+    if (!playerData.PlayerOne.name || !playerData.PlayerOne.avatarId
+      || !playerData.PlayerOne.symbol
     ) {
       return (
-        <PlayerRegisterView 
+        <PlayerRegisterView
           playerId={PlayerIdEnum.PLAYER_ONE}
-          onNextCallback={({name, avatarId, symbol}) => handleNextRegister(
+          onNextCallback={({ name, avatarId }) => handleNextRegister(
             PlayerIdEnum.PLAYER_ONE,
             name,
             avatarId,
-            symbol
-          )} 
+          )}
+        />
+      );
+    }
+    if (!playerData.PlayerTwo.name || !playerData.PlayerTwo.avatarId
+      || !playerData.PlayerTwo.symbol
+    ) {
+      return (
+        <PlayerRegisterView
+          playerId={PlayerIdEnum.PLAYER_TWO}
+          onNextCallback={({ name, avatarId }) => handleNextRegister(
+            PlayerIdEnum.PLAYER_TWO,
+            name,
+            avatarId,
+          )}
         />
       );
     }
   }
-   
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={COLORS.lightblue} />
-      { renderRegisterViews() }
+      {renderRegisterViews()}
     </View>
   );
 }
