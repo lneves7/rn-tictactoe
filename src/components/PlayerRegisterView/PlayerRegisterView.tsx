@@ -19,11 +19,6 @@ const PlayerRegisterView: React.FC<PlayerRegisterViewProps> = ({
   const [inputFocused, setInputFocused] = useState<boolean>(false);
   const isDisabled = playerName === '' || playerAvatar === '';
 
-  useEffect(() => {
-    setPlayerName('')
-    setPlayerAvatar('');
-  }, [playerId])
-
   const getPlayerString = () => {
     return playerId === PlayerIdEnum.PLAYER_ONE ? 'Player One' : 'Player Two'
   }

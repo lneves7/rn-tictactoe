@@ -33,6 +33,7 @@ export default function App() {
     ) {
       return (
         <PlayerRegisterView
+          key={`player-${PlayerIdEnum.PLAYER_ONE}-register`}
           playerId={PlayerIdEnum.PLAYER_ONE}
           onNextCallback={({ name, avatarId }) => handleNextRegister(
             PlayerIdEnum.PLAYER_ONE,
@@ -47,6 +48,7 @@ export default function App() {
     ) {
       return (
         <PlayerRegisterView
+          key={`player-${PlayerIdEnum.PLAYER_TWO}-register`}
           playerId={PlayerIdEnum.PLAYER_TWO}
           onNextCallback={({ name, avatarId }) => handleNextRegister(
             PlayerIdEnum.PLAYER_TWO,
