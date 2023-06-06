@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { PlayerData, PlayerIdEnum, SymbolEnum } from '../../types';
 import styles from './styles';
-import PlayerRegisterView from '../PlayerRegisterView/PlayerRegisterView';
+import PlayerRegisterView from '../PlayerRegisterView';
+import GameView from '../GameView';
 import { COLORS } from '../../constants';
 
 export default function App() {
@@ -28,9 +29,7 @@ export default function App() {
   }
 
   const renderRegisterViews = () => {
-    if (!playerData.PlayerOne.name || !playerData.PlayerOne.avatarId
-      || !playerData.PlayerOne.symbol
-    ) {
+    if (!playerData.PlayerOne.name || !playerData.PlayerOne.avatarId) {
       return (
         <PlayerRegisterView
           key={`player-${PlayerIdEnum.PLAYER_ONE}-register`}
@@ -43,9 +42,7 @@ export default function App() {
         />
       );
     }
-    if (!playerData.PlayerTwo.name || !playerData.PlayerTwo.avatarId
-      || !playerData.PlayerTwo.symbol
-    ) {
+    if (!playerData.PlayerTwo.name || !playerData.PlayerTwo.avatarId) {
       return (
         <PlayerRegisterView
           key={`player-${PlayerIdEnum.PLAYER_TWO}-register`}
@@ -60,10 +57,19 @@ export default function App() {
     }
   }
 
+  const renderGameView = () => {
+    if (playerData.PlayerOne.name && playerData.PlayerOne.avatarId
+      && playerData.PlayerTwo.name && playerData.PlayerTwo.avatarId) {
+      return <GameView playerData={playerData} onWinCallback={winner => console.log(winner)} />
+    }
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={COLORS.lightblue} />
       {renderRegisterViews()}
+      {renderGameView()}
     </View>
   );
 }
