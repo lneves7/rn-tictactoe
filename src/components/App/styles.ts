@@ -11,6 +11,13 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     paddingBottom: 16
   },
+  gradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: '100%',
+  }
 });
 
-export default styles;
+export default styles; 

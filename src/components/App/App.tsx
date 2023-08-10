@@ -1,6 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient'
 import { PlayerData, PlayerIdEnum, SymbolEnum } from '../../types';
 import styles from './styles';
 import PlayerRegisterView from '../PlayerRegisterView';
@@ -67,7 +68,11 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={COLORS.lightblue} />
+      <StatusBar backgroundColor={'transparent'} />
+      <LinearGradient
+        colors={[COLORS.gradient, 'transparent']}
+        style={styles.gradient}
+      />
       {renderRegisterViews()}
       {renderGameView()}
     </View>

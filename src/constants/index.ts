@@ -1,9 +1,13 @@
+import { Dimensions } from "react-native";
+
 export const COLORS = {
   light: '#FCFCFC',
   grey: '#d9d9d9',
   lightblue: '#AFD3E2',
   blue: '#19A7CE',
+  brightBlue: '#47d7ff',
   darkblue: '#146C94',
+  gradient: '#093142',
   ripple: 'rgba(227, 227, 227, 0.3)'
 };
 
@@ -23,3 +27,5 @@ export const SYMBOLS: { [x: string]: any } = {
   x: require('../../assets/x.png'),
   circle: require('../../assets/circle.png'),
 }
+
+export const BOARD_SIZE = Dimensions.get('window').width - 32
