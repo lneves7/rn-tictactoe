@@ -15,11 +15,10 @@ export default StyleSheet.create({
     borderWidth: 6,
     borderColor: COLORS.light,
     flexDirection: "row",
-    flex: 1,
   },
   wrapper__isTurn: {
     borderWidth: 6,
-    borderColor: COLORS.blue,
+    borderColor: COLORS.brightBlue,
   },
   playerName: {
     color: COLORS.darkblue,

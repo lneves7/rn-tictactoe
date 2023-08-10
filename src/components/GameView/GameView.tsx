@@ -1,18 +1,21 @@
-import { useEffect, useRef, useState } from "react";
-import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Pressable, Button } from "react-native";
+import { useState } from "react";
+import { Pressable, Text, View } from "react-native";
 import { PlayerData, PlayerIdEnum } from "../../types";
 import styles from './styles'
 import PlayerCard from "../PlayerCard";
+import Board from "../Board";
 
 export interface GameViewProps {
   playerData: PlayerData;
   onWinCallback: (winner: PlayerIdEnum) => void;
 }
 const GameView: React.FC<GameViewProps> = ({
-  playerData: { PlayerOne, PlayerTwo },
+  playerData,
   onWinCallback
 }) => {
   const [playerTurn, setPlayerTurn] = useState<PlayerIdEnum>(PlayerIdEnum.PLAYER_ONE);
+  const [winner, setWinner] = useState<PlayerIdEnum>();
+  const { PlayerOne, PlayerTwo } = playerData;
 
   const alternatePlayerTurn = () => {
     const newTurn = playerTurn === PlayerIdEnum.PLAYER_ONE
@@ -22,21 +25,35 @@ const GameView: React.FC<GameViewProps> = ({
     setPlayerTurn(newTurn);
   }
 
+  const handleWinCallback = (winner: PlayerIdEnum) => {
+    setWinner(winner);
+    onWinCallback(winner);
+  }
+
   return (
     <View style={styles.wrapper} >
-      <View style={styles.playerOneCardWrapper}>
-        <PlayerCard
-          playerData={PlayerOne}
-          isPlayerTurn={playerTurn === PlayerIdEnum.PLAYER_ONE}
-        />
+      <View>
+        {!winner &&
+          <PlayerCard
+            playerData={PlayerOne}
+            isPlayerTurn={playerTurn === PlayerIdEnum.PLAYER_ONE}
+          />
+        }
       </View>
-      <View style={styles.playerTwoCardWrapper}>
-        <PlayerCard
-          playerData={PlayerTwo}
-          isPlayerTurn={playerTurn === PlayerIdEnum.PLAYER_TWO}
-        />
+      <Board
+        currentTurn={playerTurn}
+        playerData={playerData}
+        onEndTurnCallback={alternatePlayerTurn}
+        onWinCallback={winner => handleWinCallback(winner)}
+      />
+      <View>
+        {!winner &&
+          <PlayerCard
+            playerData={PlayerTwo}
+            isPlayerTurn={playerTurn === PlayerIdEnum.PLAYER_TWO}
+          />
+        }
       </View>
-      <Button title="Trocar" onPress={() => alternatePlayerTurn()}></Button>
     </View>
   );
 };
