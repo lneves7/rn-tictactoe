@@ -29,7 +29,7 @@ const PlayerRegisterView: React.FC<PlayerRegisterViewProps> = ({
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible>
       <View style={styles.wrapper} >
         <Text style={styles.title}>
-          {`${getPlayerString()}, create your identity!`}
+          {`${getPlayerString()}, pick a nickname and avatar!`}
         </Text>
         <Text
           style={styles.inputLabel}

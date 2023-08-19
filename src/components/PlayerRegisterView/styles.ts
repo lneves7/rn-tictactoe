@@ -15,7 +15,7 @@ export default StyleSheet.create({
   },
   title: {
     color: COLORS.darkblue,
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '600',
     marginBottom: 32,
     textAlign: 'center'
