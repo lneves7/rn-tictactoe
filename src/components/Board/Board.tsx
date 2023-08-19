@@ -26,13 +26,14 @@ const Board: React.FC<BoardProps> = ({
     [0, 0, 0],
     [0, 0, 0],
   ]);
-  const [winner, setWinner] = useState<PlayerIdEnum>();
+  const [highlightTiles, setHighlightTiles] = useState<number[][]>([]);
   const [winnerData, setWinnerData] = useState<{
     name?: string;
     symbol?: SymbolEnum;
     avatarId?: string;
     winCount: number;
   }>();
+  const [winner, setWinner] = useState<PlayerIdEnum>();
   const [isTied, setIsTied] = useState<boolean>(false);
 
   useEffect(() => {
@@ -49,34 +50,58 @@ const Board: React.FC<BoardProps> = ({
       return sum === 15 || sum === 21;
     };
 
-    const checkLines = (data: number[][]) => {
-      data.some((line) => checkVictory(line));
-    };
+    const checkLines = (data: number[][]) =>
+      data.some((line, lineIndex) => {
+        const hasVictory = checkVictory(line);
+        if (hasVictory)
+          setHighlightTiles([
+            [lineIndex, 0],
+            [lineIndex, 1],
+            [lineIndex, 2],
+          ]);
+        return hasVictory;
+      });
 
     const checkColumns = (data: number[][]) => {
       for (let idx = 0; idx < 3; idx += 1) {
-        if (checkVictory([data[0][idx], data[1][idx], data[2][idx]])) break;
+        if (checkVictory([data[0][idx], data[1][idx], data[2][idx]])) {
+          setHighlightTiles([
+            [0, idx],
+            [1, idx],
+            [2, idx],
+          ]);
+          return true;
+        }
       }
+      return false;
     };
 
     const checkDiagonals = (data: number[][]) => {
-      if (
-        checkVictory([data[0][0], data[1][1], data[2][2]]) ||
-        checkVictory([data[0][2], data[1][1], data[2][0]])
-      ) {
-        return false;
+      if (checkVictory([data[0][0], data[1][1], data[2][2]])) {
+        setHighlightTiles([
+          [0, 0],
+          [1, 1],
+          [2, 2],
+        ]);
+        return true;
       }
-      return true;
+      if (checkVictory([data[0][2], data[1][1], data[2][0]])) {
+        setHighlightTiles([
+          [0, 2],
+          [1, 1],
+          [2, 0],
+        ]);
+        return true;
+      }
+      return false;
     };
 
-    if (boardData.every((line) => line.every((tile) => tile !== 0))) {
+    const hasVictory =
+      checkLines(boardData) || checkColumns(boardData) || checkDiagonals(boardData);
+    if (!hasVictory && boardData.every((line) => line.every((tile) => tile !== 0))) {
       setIsTied(true);
       onTieCallback();
-      return;
     }
-    checkLines(boardData);
-    checkColumns(boardData);
-    checkDiagonals(boardData);
   }, [boardData]);
 
   useEffect(() => {
@@ -102,6 +127,7 @@ const Board: React.FC<BoardProps> = ({
       [0, 0, 0],
       [0, 0, 0],
     ]);
+    setHighlightTiles([]);
     setWinner(undefined);
     setWinnerData(undefined);
     setIsTied(false);
@@ -112,7 +138,12 @@ const Board: React.FC<BoardProps> = ({
     boardData.map((line, lineIndex) =>
       line.map((each, columnIndex) => (
         <Pressable
-          style={styles.tile}
+          style={[
+            styles.tile,
+            highlightTiles.some(
+              (coordinates) => coordinates[0] === lineIndex && coordinates[1] === columnIndex
+            ) && styles.tile__highlighted,
+          ]}
           key={`tile-${lineIndex}-${columnIndex}`}
           android_ripple={{ color: COLORS.lightblue }}
           onPress={() => handleTilePress(lineIndex, columnIndex)}

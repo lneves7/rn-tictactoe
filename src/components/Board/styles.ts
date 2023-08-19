@@ -30,6 +30,9 @@ export default StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
+  tile__highlighted: { 
+    backgroundColor: COLORS.brightBlue
+  },
   tileImage: {
     width: (BOARD_SIZE / 3) - 8,
     height: (BOARD_SIZE / 3) - 8,
