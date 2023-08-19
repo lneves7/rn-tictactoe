@@ -1,4 +1,3 @@
-import { PlayerIdEnum } from "./PlayerIdEnum";
 import { SymbolEnum } from "./SymbolEnum";
 
 export interface PlayerData {

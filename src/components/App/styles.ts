@@ -1,5 +1,4 @@
-import { StyleSheet } from 'react-native'
-import { StatusBar as RNStatusBar } from 'react-native';
+import { StyleSheet, StatusBar as RNStatusBar } from 'react-native'
 import { COLORS } from '../../constants';
 
 const styles = StyleSheet.create({

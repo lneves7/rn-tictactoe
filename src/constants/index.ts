@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 import { Dimensions } from "react-native";
 
 export const COLORS = {
