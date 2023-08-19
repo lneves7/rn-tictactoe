@@ -11,7 +11,7 @@ export interface GameViewProps {
 }
 const GameView: React.FC<GameViewProps> = ({ playerData, onWinCallback }) => {
   const [playerTurn, setPlayerTurn] = useState<PlayerIdEnum>(PlayerIdEnum.PLAYER_ONE);
-  const [hasCurrentWinner, setHasCurrentWinner] = useState<boolean>();
+  const [showPlayerCards, setShowPlayerCards] = useState<boolean>(true);
   const { PlayerOne, PlayerTwo } = playerData;
 
   const alternatePlayerTurn = () => {
@@ -22,14 +22,14 @@ const GameView: React.FC<GameViewProps> = ({ playerData, onWinCallback }) => {
   };
 
   const handleWinCallback = (winner: PlayerIdEnum) => {
-    setHasCurrentWinner(true);
+    setShowPlayerCards(false);
     onWinCallback(winner);
   };
 
   return (
     <View style={styles.wrapper}>
       <View>
-        {!hasCurrentWinner && (
+        {showPlayerCards && (
           <PlayerCard
             playerData={PlayerOne}
             isPlayerTurn={playerTurn === PlayerIdEnum.PLAYER_ONE}
@@ -41,10 +41,11 @@ const GameView: React.FC<GameViewProps> = ({ playerData, onWinCallback }) => {
         playerData={playerData}
         onEndTurnCallback={alternatePlayerTurn}
         onWinCallback={(winner) => handleWinCallback(winner)}
-        onPlayAgainCallback={() => setHasCurrentWinner(false)}
+        onPlayAgainCallback={() => setShowPlayerCards(true)}
+        onTieCallback={() => setShowPlayerCards(false)}
       />
       <View>
-        {!hasCurrentWinner && (
+        {showPlayerCards && (
           <PlayerCard
             playerData={PlayerTwo}
             isPlayerTurn={playerTurn === PlayerIdEnum.PLAYER_TWO}

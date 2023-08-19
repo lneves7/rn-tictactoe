@@ -10,14 +10,16 @@ interface BoardProps {
   onEndTurnCallback: () => void;
   onWinCallback: (winner: PlayerIdEnum) => void;
   onPlayAgainCallback: () => void;
+  onTieCallback: () => void;
 }
 
 const Board: React.FC<BoardProps> = ({
   currentTurn,
+  playerData,
   onEndTurnCallback,
   onWinCallback,
-  playerData,
   onPlayAgainCallback,
+  onTieCallback,
 }) => {
   const [boardData, setBoardData] = useState<number[][]>([
     [0, 0, 0],
@@ -31,6 +33,7 @@ const Board: React.FC<BoardProps> = ({
     avatarId?: string;
     winCount: number;
   }>();
+  const [isTied, setIsTied] = useState<boolean>(false);
 
   useEffect(() => {
     const checkVictory = (arr: number[]) => {
@@ -65,6 +68,12 @@ const Board: React.FC<BoardProps> = ({
       }
       return true;
     };
+
+    if (boardData.every((line) => line.every((tile) => tile !== 0))) {
+      setIsTied(true);
+      onTieCallback();
+      return;
+    }
     checkLines(boardData);
     checkColumns(boardData);
     checkDiagonals(boardData);
@@ -77,7 +86,7 @@ const Board: React.FC<BoardProps> = ({
   }, [winner]);
 
   const handleTilePress = (lineIndex: number, columnIndex: number) => {
-    if (winner || boardData[lineIndex][columnIndex] !== 0) return;
+    if (winner || isTied || boardData[lineIndex][columnIndex] !== 0) return;
     const valueToSet = currentTurn === PlayerIdEnum.PLAYER_ONE ? 5 : 7;
     setBoardData((prevBoardData) => {
       const cloneBoard = [...prevBoardData];
@@ -95,6 +104,7 @@ const Board: React.FC<BoardProps> = ({
     ]);
     setWinner(undefined);
     setWinnerData(undefined);
+    setIsTied(false);
     onPlayAgainCallback();
   };
 
@@ -114,9 +124,11 @@ const Board: React.FC<BoardProps> = ({
     );
 
   return (
-    <View style={[styles.wrapper, winner && styles.wrapper__full]}>
-      <View style={[styles.board, winner && styles.board__withFeedback]}>{renderTiles()}</View>
-      {winnerData && (
+    <View style={[styles.wrapper, (winner || isTied) && styles.wrapper__full]}>
+      <View style={[styles.board, (winner || isTied) && styles.board__withFeedback]}>
+        {renderTiles()}
+      </View>
+      {(winnerData || isTied) && (
         <View style={styles.feedback}>
           <View
             style={{
@@ -125,8 +137,13 @@ const Board: React.FC<BoardProps> = ({
               alignItems: 'center',
             }}
           >
-            <Image style={styles.feedbackAvatar} source={AVATARS[winnerData.avatarId || '']} />
-            <Text style={styles.feedbackText}>{winnerData.name} wins!</Text>
+            {winnerData && (
+              <>
+                <Image style={styles.feedbackAvatar} source={AVATARS[winnerData.avatarId || '']} />
+                <Text style={styles.feedbackText}>{winnerData.name} wins!</Text>
+              </>
+            )}
+            {isTied && <Text style={styles.feedbackText}>Game tied!</Text>}
           </View>
           <Pressable style={styles.feedbackButton} onPress={() => handlePlayAgainPress()}>
             <Text style={styles.feedbackButtonText}>Play again</Text>
