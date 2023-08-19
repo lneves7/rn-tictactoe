@@ -25,6 +25,16 @@ export default function App() {
     }));
   };
 
+  const addWinCount = (playerId: PlayerIdEnum) => {
+    setPlayerData((prevPlayerData) => ({
+      ...prevPlayerData,
+      [playerId]: {
+        ...prevPlayerData[playerId],
+        winCount: prevPlayerData[playerId].winCount + 1,
+      },
+    }));
+  };
+
   const renderRegisterViews = () => {
     if (!playerData.PlayerOne.name || !playerData.PlayerOne.avatarId) {
       return (
@@ -58,7 +68,7 @@ export default function App() {
       playerData.PlayerTwo.name &&
       playerData.PlayerTwo.avatarId
     ) {
-      return <GameView playerData={playerData} onWinCallback={(winner) => console.log(winner)} />;
+      return <GameView playerData={playerData} onWinCallback={(winner) => addWinCount(winner)} />;
     }
     return null;
   };

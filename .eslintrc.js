@@ -33,5 +33,6 @@ module.exports = {
     'react/no-array-index-key': 'off',
     'no-restricted-exports': 'off',
     'import/prefer-default-export': 'off',
+    'no-return-assign': 'off',
   },
 };
