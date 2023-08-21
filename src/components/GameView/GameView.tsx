@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { View } from 'react-native';
-import { PlayerData, PlayerIdEnum } from '../../types';
+import { PlayerIdEnum } from '../../types';
 import styles from './styles';
 import PlayerCard from '../PlayerCard';
 import Board from '../Board';
+import { PlayerDataContext } from '../../context';
 
-export interface GameViewProps {
-  playerData: PlayerData;
-  onWinCallback: (winner: PlayerIdEnum) => void;
-}
-const GameView: React.FC<GameViewProps> = ({ playerData, onWinCallback }) => {
+const GameView: React.FC = () => {
+  const {
+    playerData: { PlayerOne, PlayerTwo },
+    setPlayerData,
+  } = useContext(PlayerDataContext);
   const [playerTurn, setPlayerTurn] = useState<PlayerIdEnum>(PlayerIdEnum.PLAYER_ONE);
   const [showPlayerCards, setShowPlayerCards] = useState<boolean>(true);
-  const { PlayerOne, PlayerTwo } = playerData;
 
   const alternatePlayerTurn = () => {
     const newTurn =
@@ -23,7 +23,13 @@ const GameView: React.FC<GameViewProps> = ({ playerData, onWinCallback }) => {
 
   const handleWinCallback = (winner: PlayerIdEnum) => {
     setShowPlayerCards(false);
-    onWinCallback(winner);
+    setPlayerData((prevPlayerData) => ({
+      ...prevPlayerData,
+      [winner]: {
+        ...prevPlayerData[winner],
+        winCount: prevPlayerData[winner].winCount + 1,
+      },
+    }));
   };
 
   return (
@@ -38,7 +44,6 @@ const GameView: React.FC<GameViewProps> = ({ playerData, onWinCallback }) => {
       </View>
       <Board
         currentTurn={playerTurn}
-        playerData={playerData}
         onEndTurnCallback={alternatePlayerTurn}
         onWinCallback={(winner) => handleWinCallback(winner)}
         onPlayAgainCallback={() => setShowPlayerCards(true)}

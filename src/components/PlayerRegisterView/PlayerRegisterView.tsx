@@ -1,15 +1,16 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Pressable } from 'react-native';
 import { PlayerIdEnum } from '../../types';
 import styles from './styles';
 import { COLORS } from '../../constants';
 import AvatarPicker from '../AvatarPicker/AvatarPicker';
+import { PlayerDataContext } from '../../context';
 
 export interface PlayerRegisterViewProps {
   playerId: PlayerIdEnum;
-  onNextCallback: (input: { name: string; avatarId: string }) => void;
 }
-const PlayerRegisterView: React.FC<PlayerRegisterViewProps> = ({ playerId, onNextCallback }) => {
+const PlayerRegisterView: React.FC<PlayerRegisterViewProps> = ({ playerId }) => {
+  const { setPlayerData } = useContext(PlayerDataContext);
   const inputRef = useRef<TextInput>(null);
   const [playerName, setPlayerName] = useState<string>('');
   const [playerAvatar, setPlayerAvatar] = useState<string>('');
@@ -20,6 +21,17 @@ const PlayerRegisterView: React.FC<PlayerRegisterViewProps> = ({ playerId, onNex
     playerId === PlayerIdEnum.PLAYER_ONE ? 'Player One' : 'Player Two';
 
   const handleAvatarSelect = (avatarId: string) => setPlayerAvatar(avatarId);
+
+  const handleNextPress = (playerid: PlayerIdEnum, name: string, avatarId: string) => {
+    setPlayerData((prevPlayerData) => ({
+      ...prevPlayerData,
+      [playerid]: {
+        ...prevPlayerData[playerid],
+        name,
+        avatarId,
+      },
+    }));
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible>
@@ -42,7 +54,7 @@ const PlayerRegisterView: React.FC<PlayerRegisterViewProps> = ({ playerId, onNex
           android_ripple={{ color: COLORS.ripple }}
           style={[styles.submit, isDisabled && styles.submit__disabled]}
           onPress={() => {
-            onNextCallback({ name: playerName, avatarId: playerAvatar });
+            handleNextPress(playerId, playerName, playerAvatar);
           }}
         >
           <Text style={styles.submitText}>Confirm</Text>

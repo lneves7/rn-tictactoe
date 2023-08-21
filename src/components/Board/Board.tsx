@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import styles from './styles';
-import { PlayerIdEnum, PlayerData, SymbolEnum } from '../../types';
+import { PlayerIdEnum, SymbolEnum } from '../../types';
 import { AVATARS, COLORS, SYMBOLS } from '../../constants';
+import { PlayerDataContext } from '../../context';
 
 interface BoardProps {
   currentTurn: PlayerIdEnum;
-  playerData: PlayerData;
   onEndTurnCallback: () => void;
   onWinCallback: (winner: PlayerIdEnum) => void;
   onPlayAgainCallback: () => void;
@@ -15,12 +15,12 @@ interface BoardProps {
 
 const Board: React.FC<BoardProps> = ({
   currentTurn,
-  playerData,
   onEndTurnCallback,
   onWinCallback,
   onPlayAgainCallback,
   onTieCallback,
 }) => {
+  const { playerData } = useContext(PlayerDataContext);
   const [boardData, setBoardData] = useState<number[][]>([
     [0, 0, 0],
     [0, 0, 0],

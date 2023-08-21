@@ -15,6 +15,7 @@ export default StyleSheet.create({
     gap: 4,
     alignContent: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   board__withFeedback: {
     marginTop: 100,

@@ -1,39 +1,16 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import { PlayerData, PlayerIdEnum, SymbolEnum } from '../../types';
+import { PlayerIdEnum } from '../../types';
 import styles from './styles';
 import PlayerRegisterView from '../PlayerRegisterView';
 import GameView from '../GameView';
 import { COLORS } from '../../constants';
+import { PlayerDataContext } from '../../context';
 
 export default function App() {
-  const [playerData, setPlayerData] = useState<PlayerData>({
-    PlayerOne: { winCount: 0, symbol: SymbolEnum.X },
-    PlayerTwo: { winCount: 0, symbol: SymbolEnum.CIRCLE },
-  });
-
-  const handleNextRegister = (playerid: PlayerIdEnum, name: string, avatarId: string) => {
-    setPlayerData((prevPlayerData) => ({
-      ...prevPlayerData,
-      [playerid]: {
-        ...prevPlayerData[playerid],
-        name,
-        avatarId,
-      },
-    }));
-  };
-
-  const addWinCount = (playerId: PlayerIdEnum) => {
-    setPlayerData((prevPlayerData) => ({
-      ...prevPlayerData,
-      [playerId]: {
-        ...prevPlayerData[playerId],
-        winCount: prevPlayerData[playerId].winCount + 1,
-      },
-    }));
-  };
+  const { playerData } = useContext(PlayerDataContext);
 
   const renderRegisterViews = () => {
     if (!playerData.PlayerOne.name || !playerData.PlayerOne.avatarId) {
@@ -41,9 +18,6 @@ export default function App() {
         <PlayerRegisterView
           key={`player-${PlayerIdEnum.PLAYER_ONE}-register`}
           playerId={PlayerIdEnum.PLAYER_ONE}
-          onNextCallback={({ name, avatarId }) =>
-            handleNextRegister(PlayerIdEnum.PLAYER_ONE, name, avatarId)
-          }
         />
       );
     }
@@ -52,9 +26,6 @@ export default function App() {
         <PlayerRegisterView
           key={`player-${PlayerIdEnum.PLAYER_TWO}-register`}
           playerId={PlayerIdEnum.PLAYER_TWO}
-          onNextCallback={({ name, avatarId }) =>
-            handleNextRegister(PlayerIdEnum.PLAYER_TWO, name, avatarId)
-          }
         />
       );
     }
@@ -68,7 +39,7 @@ export default function App() {
       playerData.PlayerTwo.name &&
       playerData.PlayerTwo.avatarId
     ) {
-      return <GameView playerData={playerData} onWinCallback={(winner) => addWinCount(winner)} />;
+      return <GameView />;
     }
     return null;
   };
