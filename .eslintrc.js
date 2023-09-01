@@ -31,6 +31,7 @@ module.exports = {
     'react/function-component-definition': 'off',
     'react/prop-types': 'off',
     'react/no-array-index-key': 'off',
+    'react/no-unescaped-entities': 'off',
     'no-restricted-exports': 'off',
     'import/prefer-default-export': 'off',
     'no-return-assign': 'off',

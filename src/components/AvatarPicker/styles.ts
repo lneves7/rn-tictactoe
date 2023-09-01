@@ -33,8 +33,14 @@ export default StyleSheet.create({
     borderColor: COLORS.blue,
     backgroundColor: COLORS.lightblue
   },
+  avatarButton__disabled: {
+    borderWidth: 3,
+    borderColor: COLORS.grey,
+    backgroundColor: COLORS.grey,
+    opacity: 0.2
+  },
   avatarImage: {
     width: 90,
     height: 90
-  }
+  },
 });

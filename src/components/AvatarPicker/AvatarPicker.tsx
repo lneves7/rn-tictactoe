@@ -4,19 +4,29 @@ import { AVATARS, COLORS } from '../../constants';
 
 interface AvatarPickerProps {
   selectedAvatar: string;
+  disabledAvatar: string;
   onSelectAvatarCallback: (avatarId: string) => void;
 }
 
-const AvatarPicker: React.FC<AvatarPickerProps> = ({ selectedAvatar, onSelectAvatarCallback }) => {
+const AvatarPicker: React.FC<AvatarPickerProps> = ({
+  selectedAvatar,
+  onSelectAvatarCallback,
+  disabledAvatar,
+}) => {
   const renderAvatars = () =>
     Object.keys(AVATARS).map((avatarId, index) => (
       <Pressable
         key={`avatar-button-${avatarId}`}
+        disabled={avatarId === disabledAvatar}
         android_ripple={{ color: COLORS.ripple }}
-        style={[styles.avatarButton, selectedAvatar === avatarId && styles.avatarButton__selected]}
+        style={[
+          styles.avatarButton,
+          selectedAvatar === avatarId && styles.avatarButton__selected,
+          disabledAvatar === avatarId && styles.avatarButton__disabled,
+        ]}
         onPress={() => onSelectAvatarCallback(avatarId)}
       >
-        <Image style={styles.avatarImage} source={Object.values(AVATARS)[index]} />
+        <Image style={[styles.avatarImage]} source={Object.values(AVATARS)[index]} />
       </Pressable>
     ));
 

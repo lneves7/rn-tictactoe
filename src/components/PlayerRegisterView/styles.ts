@@ -34,9 +34,18 @@ export default StyleSheet.create({
     paddingVertical: 8,
     fontSize: 16,
   },
-  inputFocused: {
+  input__focused: {
     borderWidth: 2,
     borderColor: COLORS.blue
+  },
+  input__error: {
+    borderWidth: 2,
+    borderColor: '#FF0000'
+  },
+  errorMessage: {
+    fontSize: 12,
+    color: '#FF0000',
+    marginTop: 8
   },
   submit: {
     height: 48,

@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useRef, useState, useMemo } from 'react';
 import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Pressable } from 'react-native';
 import { PlayerIdEnum } from '../../types';
 import styles from './styles';
@@ -10,15 +10,32 @@ export interface PlayerRegisterViewProps {
   playerId: PlayerIdEnum;
 }
 const PlayerRegisterView: React.FC<PlayerRegisterViewProps> = ({ playerId }) => {
-  const { setPlayerData } = useContext(PlayerDataContext);
+  const { playerData, setPlayerData } = useContext(PlayerDataContext);
   const inputRef = useRef<TextInput>(null);
   const [playerName, setPlayerName] = useState<string>('');
   const [playerAvatar, setPlayerAvatar] = useState<string>('');
   const [inputFocused, setInputFocused] = useState<boolean>(false);
-  const isDisabled = playerName === '' || playerAvatar === '';
 
   const getPlayerString = () =>
     playerId === PlayerIdEnum.PLAYER_ONE ? 'Player One' : 'Player Two';
+
+  const isSameNameThanOtherPlayer = () => {
+    const { PlayerOne, PlayerTwo } = playerData;
+    if (playerId === PlayerIdEnum.PLAYER_ONE) {
+      return PlayerTwo.name === playerName;
+    }
+    return PlayerOne.name === playerName;
+  };
+
+  const getOtherPlayerAvatar = () => {
+    const { PlayerOne, PlayerTwo } = playerData;
+    return playerId === PlayerIdEnum.PLAYER_ONE ? PlayerTwo.avatarId : PlayerOne.avatarId;
+  };
+
+  const isDisabled = useMemo(
+    () => playerName === '' || playerAvatar === '' || isSameNameThanOtherPlayer(),
+    [playerName, playerAvatar, playerData]
+  );
 
   const handleAvatarSelect = (avatarId: string) => setPlayerAvatar(avatarId);
 
@@ -42,13 +59,24 @@ const PlayerRegisterView: React.FC<PlayerRegisterViewProps> = ({ playerId }) => 
           ref={inputRef}
           placeholder="Type here"
           placeholderTextColor={COLORS.grey}
-          style={[styles.input, inputFocused && styles.inputFocused]}
+          style={[
+            styles.input,
+            inputFocused && styles.input__focused,
+            isSameNameThanOtherPlayer() && styles.input__error,
+          ]}
           value={playerName}
           onChangeText={(value) => setPlayerName(value)}
           onFocus={() => setInputFocused(true)}
           onBlur={() => setInputFocused(false)}
         />
-        <AvatarPicker selectedAvatar={playerAvatar} onSelectAvatarCallback={handleAvatarSelect} />
+        {isSameNameThanOtherPlayer() && (
+          <Text style={styles.errorMessage}>Can't be the same nickname of other player!</Text>
+        )}
+        <AvatarPicker
+          selectedAvatar={playerAvatar}
+          disabledAvatar={getOtherPlayerAvatar() || ''}
+          onSelectAvatarCallback={handleAvatarSelect}
+        />
         <Pressable
           disabled={isDisabled}
           android_ripple={{ color: COLORS.ripple }}
