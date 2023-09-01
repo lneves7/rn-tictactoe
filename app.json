@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#19A7CE"
-      }
+      },
+      "package": "com.luizhns.rntictactoe"
     },
     "web": {
       "favicon": "./assets/favicon.png"
