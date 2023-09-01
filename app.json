@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#19A7CE"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -24,6 +26,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4eaaa7e0-3bff-4680-896b-c92976bcf02c"
+      }
+    },
+    "owner": "luizhns"
   }
 }
